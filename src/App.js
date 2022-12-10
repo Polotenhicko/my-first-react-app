@@ -26,15 +26,6 @@ class App extends React.Component {
 		console.log(this.state.taskArray);
 	}
 
-	// setNewTask(taskValue) {
-	// 	const taskObj = {
-	// 		id: ++this.maxId,
-	// 		value: taskValue,
-	// 		state: 0,
-	// 	};
-	// 	this.setState({ taskArray: [...this.state.taskArray, taskObj] });
-	// }
-
 	setNewTask(taskValue) {
 		const taskObj = {
 			id: ++this.maxId,
@@ -91,13 +82,9 @@ class HeaderControl extends React.Component {
 }
 
 class TaskList extends React.Component {
-	constructor(props) {
-		super(props);
-		this.taskArray = this.props.taskArray.map((taskObj) => <TaskItem key={taskObj.id} state={taskObj.state} value={taskObj.value} />);
-	}
-
 	render() {
-		return <div className="task-list">{this.taskArray}</div>;
+		const taskArray = this.props.taskArray.map((taskObj) => <TaskItem key={taskObj.id} state={taskObj.state} value={taskObj.value} />);
+		return <ul className="task-list">{taskArray}</ul>;
 	}
 }
 
@@ -107,7 +94,7 @@ class TaskItem extends React.Component {
 	}
 
 	render() {
-		return <li>{this.props.value}</li>;
+		return <li className="task-item">{this.props.value}</li>;
 	}
 }
 
