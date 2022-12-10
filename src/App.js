@@ -1,101 +1,141 @@
-import React from "react";
-import Joi from "joi";
+import React from 'react';
+import Joi from 'joi';
 
 const taskSchema = Joi.array().items(
-	Joi.object({
-		id: Joi.number(),
-		value: Joi.string(),
-		state: Joi.number().integer().min(0).max(3),
-	})
+  Joi.object({
+    id: Joi.number(),
+    value: Joi.string(),
+    state: Joi.number().integer().min(0).max(1),
+  })
 );
 
-const LOCALNAME = "__taskArray";
+const LOCALNAME = '__taskArray';
+const STATELIST = {
+  0: 'active',
+  1: 'completed',
+};
 
 class App extends React.Component {
-	constructor(props) {
-		super(props);
-		try {
-			this.state = { taskArray: Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema) };
-		} catch (e) {
-			this.state = { taskArray: [] };
-		}
+  constructor(props) {
+    super(props);
+    try {
+      this.state = {
+        taskArray: Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema),
+      };
+    } catch (e) {
+      this.state = { taskArray: [] };
+    }
 
-		const idList = this.state.taskArray.map((taskObj) => taskObj.id);
-		this.maxId = idList.length ? Math.max(...idList) : -1;
-		this.setNewTask = this.setNewTask.bind(this);
-		console.log(this.state.taskArray);
-	}
+    const idList = this.state.taskArray.map((taskObj) => taskObj.id);
+    this.maxId = idList.length ? Math.max(...idList) : -1;
+  }
 
-	setNewTask(taskValue) {
-		const taskObj = {
-			id: ++this.maxId,
-			value: taskValue,
-			state: 0,
-		};
-		this.setState((state) => {
-			const taskArray = [...state.taskArray, taskObj];
-			localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
-			return { taskArray };
-		});
-	}
+  handleSetNewTask = (taskValue) => {
+    const taskObj = {
+      id: ++this.maxId,
+      value: taskValue,
+      state: 0,
+    };
+    this.setState((state) => {
+      const taskArray = [...state.taskArray, taskObj];
+      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      return { taskArray };
+    });
+  };
 
-	render() {
-		return (
-			<div className="App">
-				<HeaderControl setNewTask={this.setNewTask} />
-				<TaskList taskArray={this.state.taskArray} />
-			</div>
-		);
-	}
+  handleSwitchCompleteTask = (taskObj) => {
+    this.setState((state) => {
+      const indexTaskObj = state.taskArray.indexOf(taskObj);
+      state.taskArray[indexTaskObj].state = state.taskArray[indexTaskObj].state ? 0 : 1;
+      localStorage.setItem(LOCALNAME, JSON.stringify(state.taskArray));
+      return state;
+    });
+  };
+
+  handleDeleteTask = (taskId) => {
+    this.setState((state) => {
+      const taskArray = state.taskArray.filter((taskObj) => taskObj.id !== taskId);
+      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      return { taskArray };
+    });
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <HeaderControl onSetNewTask={this.handleSetNewTask} />
+        <TaskList
+          taskArray={this.state.taskArray}
+          onCompleteTask={this.handleSwitchCompleteTask}
+          onDeleteTask={this.handleDeleteTask}
+        />
+      </div>
+    );
+  }
 }
 
 class HeaderControl extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: "",
-		};
+  constructor(props) {
+    super(props);
+    this.state = {
+      value: '',
+    };
+  }
 
-		this.handleInput = this.handleInput.bind(this);
-		this.handleForm = this.handleForm.bind(this);
-	}
+  handleInput = (e) => {
+    this.setState({
+      value: e.target.value,
+    });
+  };
 
-	handleInput(e) {
-		this.setState({
-			value: e.target.value,
-		});
-	}
+  handleForm = (e) => {
+    e.preventDefault();
+    this.props.onSetNewTask(this.state.value);
+  };
 
-	handleForm(e) {
-		e.preventDefault();
-		this.props.setNewTask(this.state.value);
-	}
-
-	render() {
-		return (
-			<form className="todo-header" onSubmit={this.handleForm}>
-				<input type="text" onChange={this.handleInput} value={this.state.value} />
-				<button type="submit">Добавить</button>
-			</form>
-		);
-	}
+  render() {
+    return (
+      <form className="todo-header" onSubmit={this.handleForm}>
+        <input type="text" onChange={this.handleInput} value={this.state.value} />
+        <button type="submit">Добавить</button>
+      </form>
+    );
+  }
 }
 
-class TaskList extends React.Component {
-	render() {
-		const taskArray = this.props.taskArray.map((taskObj) => <TaskItem key={taskObj.id} state={taskObj.state} value={taskObj.value} />);
-		return <ul className="task-list">{taskArray}</ul>;
-	}
+function TaskList(props) {
+  const taskArray = props.taskArray.map((taskObj) => (
+    <TaskItem
+      key={taskObj.id}
+      taskObj={taskObj}
+      onCompleteTask={props.onCompleteTask}
+      onDeleteTask={props.onDeleteTask}
+    />
+  ));
+  return <ul className="task-list">{taskArray}</ul>;
 }
 
 class TaskItem extends React.Component {
-	constructor(props) {
-		super(props);
-	}
+  handleTaskComplete = (e) => {
+    this.props.onCompleteTask(this.props.taskObj);
+  };
 
-	render() {
-		return <li className="task-item">{this.props.value}</li>;
-	}
+  handleTaskDelete = (e) => {
+    this.props.onDeleteTask(this.props.taskObj.id);
+  };
+
+  render() {
+    return (
+      <li className={`task-item ${STATELIST[this.props.taskObj.state]}`}>
+        <span className="task-item-value" onClick={this.handleTaskComplete}>
+          {this.props.taskObj.value}
+        </span>
+        <div className="btn-task" onClick={this.handleTaskDelete}>
+          Удалить
+        </div>
+      </li>
+    );
+  }
 }
 
 export default App;
