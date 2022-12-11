@@ -91,8 +91,7 @@ class HeaderControl extends React.Component {
 
   handleForm = (e) => {
     e.preventDefault();
-    if (!this.state.value) return;
-    this.props.onSetNewTask(this.state.value);
+    if (this.state.value) this.props.onSetNewTask(this.state.value);
   };
 
   render() {
