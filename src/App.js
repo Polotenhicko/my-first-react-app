@@ -24,6 +24,7 @@ class App extends React.Component {
       };
     } catch (e) {
       this.state = { taskArray: [] };
+      localStorage.setItem(LOCALNAME, JSON.stringify([]));
     }
 
     const idList = this.state.taskArray.map((taskObj) => taskObj.id);
@@ -90,14 +91,22 @@ class HeaderControl extends React.Component {
 
   handleForm = (e) => {
     e.preventDefault();
+    if (!this.state.value) return;
     this.props.onSetNewTask(this.state.value);
   };
 
   render() {
     return (
       <form className="todo-header" onSubmit={this.handleForm}>
-        <input type="text" onChange={this.handleInput} value={this.state.value} />
-        <button type="submit">Добавить</button>
+        <input
+          className="todo-input"
+          type="text"
+          onChange={this.handleInput}
+          value={this.state.value}
+        />
+        <button className="todo-submit" type="submit">
+          Добавить
+        </button>
       </form>
     );
   }
