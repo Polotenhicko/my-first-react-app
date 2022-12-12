@@ -124,26 +124,53 @@ function TaskList(props) {
 }
 
 class TaskItem extends React.Component {
+  state = {
+    deleted: false,
+  };
+
+  // мс
+  #TRANSTIME = 300;
+
   handleTaskComplete = (e) => {
     this.props.onCompleteTask(this.props.taskObj);
   };
 
-  handleTaskDelete = (e) => {
-    this.props.onDeleteTask(this.props.taskObj.id);
+  handleDeleteTask = (e) => {
+    this.setState({ deleted: true });
+    setTimeout(() => this.props.onDeleteTask(this.props.taskObj.id), this.#TRANSTIME);
   };
 
   render() {
     return (
-      <li className={`task-item ${STATELIST[this.props.taskObj.state]}`}>
-        <span className="task-item-value" onClick={this.handleTaskComplete}>
+      <li
+        className={`task-item ${STATELIST[this.props.taskObj.state]} ${
+          this.state.deleted ? 'deleted' : ''
+        }`}
+        style={{ transition: `opacity ${this.#TRANSTIME}ms` }}
+      >
+        <div className="task-item-value" onClick={this.handleTaskComplete}>
           {this.props.taskObj.value}
-        </span>
-        <div className="btn-task" onClick={this.handleTaskDelete}>
-          Удалить
+        </div>
+        <div className="btn-task" onClick={this.handleDeleteTask}>
+          <SvgTrashCan />
         </div>
       </li>
     );
   }
+}
+
+function SvgTrashCan(props) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="489.74px"
+      height="489.74px"
+      viewBox="0 0 489.74 489.74"
+    >
+      <path d="M361.051,199.929H102.01V489.74h259.041V199.929L361.051,199.929z M170.818,450.163h-13.492V239.505h13.492V450.163z     M238.276,450.163h-13.492V239.505h13.492V450.163z M305.734,450.163h-13.492V239.505h13.492V450.163z" />
+      <path d="M387.73,145.959l-52.74-30.672l28.129-48.365L248.047,0l-28.127,48.362l-56.113-32.634l-26.678,45.875l223.922,130.231    L387.73,145.959z M257.808,36.891l68.421,39.792l-14.564,25.038L243.241,61.93L257.808,36.891z" />
+    </svg>
+  );
 }
 
 export default App;

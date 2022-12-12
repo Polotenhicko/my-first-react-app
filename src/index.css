@@ -37,15 +37,9 @@ li {
   margin-top: 15px;
   display: flex;
   flex-direction: column;
-  row-gap: 15px;
-}
-
-.active {
-  background-color: greenyellow;
-}
-
-.completed {
-  background-color: yellow;
+  row-gap: 30px;
+  max-width: 800px;
+  width: 100%;
 }
 
 .todo-header {
@@ -60,6 +54,7 @@ li {
   border-radius: 5px;
   font-size: inherit;
   padding: 15px 10px;
+  width: 100%;
 }
 
 .todo-header .todo-submit {
@@ -69,4 +64,56 @@ li {
   padding: 10px 15px;
   cursor: pointer;
   font-size: 70%;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  row-gap: 10px;
+}
+
+.task-list .task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  column-gap: 10px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  background-color: greenyellow;
+  opacity: 1;
+}
+
+.task-list .task-item.deleted {
+  opacity: 0;
+}
+
+.task-list .task-item .task-item-value {
+  padding: 5px;
+  word-break: break-all;
+  width: 100%;
+}
+
+.task-list .task-item.completed .task-item-value {
+  text-decoration: line-through;
+}
+
+.task-list .task-item .btn-task {
+  padding: 5px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.task-list .task-item .btn-task svg {
+  width: 64px;
+  height: 64px;
+}
+
+.task-list .task-item .btn-task svg path:last-child {
+  transform: rotate(-30deg) translate(-28%, 30%);
+  transition: transform 0.25s;
+}
+
+.task-list .task-item .btn-task:hover svg path:last-child {
+  transform: rotate(0deg) translate(0, 0);
 }
