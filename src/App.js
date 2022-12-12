@@ -135,7 +135,8 @@ class TaskItem extends React.Component {
     this.props.onCompleteTask(this.props.taskObj);
   };
 
-  handleDeleteTask = (e) => {
+  handleTaskDelete = (e) => {
+    e.stopPropagation();
     this.setState({ deleted: true });
     setTimeout(() => this.props.onDeleteTask(this.props.taskObj.id), this.#TRANSTIME);
   };
@@ -147,11 +148,10 @@ class TaskItem extends React.Component {
           this.state.deleted ? 'deleted' : ''
         }`}
         style={{ transition: `opacity ${this.#TRANSTIME}ms` }}
+        onClick={this.handleTaskComplete}
       >
-        <div className="task-item-value" onClick={this.handleTaskComplete}>
-          {this.props.taskObj.value}
-        </div>
-        <div className="btn-task" onClick={this.handleDeleteTask}>
+        <div className="task-item-value">{this.props.taskObj.value}</div>
+        <div className="btn-task" onClick={this.handleTaskDelete}>
           <SvgTrashCan />
         </div>
       </li>

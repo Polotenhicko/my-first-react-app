@@ -70,18 +70,50 @@ li {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  row-gap: 10px;
+  row-gap: 15px;
 }
 
 .task-list .task-item {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
   column-gap: 10px;
   border-radius: 6px;
   transition: all 0.15s;
-  background-color: greenyellow;
+  color: #000;
   opacity: 1;
+  overflow: hidden;
+}
+
+.task-list .task-item.active::before {
+  height: 200%;
+  background-color: #fff;
+}
+
+.task-list .task-item.completed::before {
+  height: 200%;
+  background-color: #00ab00;
+}
+
+.task-list .task-item::before {
+  content: '';
+  width: 100%;
+  height: 0;
+  position: absolute;
+  transition: 0.8s;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: 50% 50% 0 0;
+}
+
+.task-list .task-item.task-item.completed {
+  color: #fff;
+}
+
+.task-list .task-item.task-item.completed svg path {
+  fill: #fff;
 }
 
 .task-list .task-item.deleted {
@@ -92,10 +124,6 @@ li {
   padding: 5px;
   word-break: break-all;
   width: 100%;
-}
-
-.task-list .task-item.completed .task-item-value {
-  text-decoration: line-through;
 }
 
 .task-list .task-item .btn-task {
