@@ -128,9 +128,13 @@ li {
   height: 64px;
 }
 
+.task-list .task-item .btn-task svg path {
+  transition: fill 0.25s;
+}
+
 .task-list .task-item .btn-task svg path:last-child {
   transform: rotate(-30deg) translate(-28%, 30%);
-  transition: transform 0.25s;
+  transition: all 0.25s;
 }
 
 .task-list .task-item .btn-task:hover svg path:last-child {
