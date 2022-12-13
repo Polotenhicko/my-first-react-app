@@ -22,6 +22,14 @@ code {
   max-width: 100%;
 }
 
+.btn {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: auto;
+}
+
 ul,
 li {
   list-style: none;
@@ -57,12 +65,15 @@ li {
   width: 100%;
 }
 
-.todo-header .todo-submit {
+.todo-header .btn {
   outline: none;
   border: none;
   border-radius: 5px;
+  transition: all 0.25s;
+}
+
+.todo-header .todo-submit {
   padding: 10px 15px;
-  cursor: pointer;
   font-size: 70%;
 }
 
@@ -85,6 +96,7 @@ li {
   background-color: #fff;
   opacity: 1;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .slide-background {
@@ -139,4 +151,18 @@ li {
 
 .task-list .task-item .btn-task:hover svg path:last-child {
   transform: rotate(0deg) translate(0, 0);
+}
+
+.todo-header .todo-search {
+  padding: 10px;
+}
+
+.todo-header .todo-search.active {
+  /* background-color: #fff; */
+  background-color: #5adeff;
+}
+
+.todo-header .todo-search svg {
+  width: 64px;
+  height: 46px;
 }

@@ -58,10 +58,17 @@ export default class App extends React.Component {
     });
   };
 
+  handleSearchTask = (taskValue) => {
+    //
+  };
+
   render() {
     return (
       <div className="App">
-        <HeaderControl onSetNewTask={this.handleSetNewTask} />
+        <HeaderControl
+          onSetNewTask={this.handleSetNewTask}
+          onSearchTask={this.handleSearchTask}
+        />
         <TaskList
           taskArray={this.state.taskArray}
           onCompleteTask={this.handleSwitchCompleteTask}

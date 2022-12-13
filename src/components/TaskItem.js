@@ -8,7 +8,6 @@ export class TaskItem extends React.Component {
     this.state = {
       deleted: false,
     };
-    this.nextSlideId = 2;
     // мс
     this.transitionTime = 300;
   }
