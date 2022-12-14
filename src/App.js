@@ -15,13 +15,18 @@ const taskSchema = Joi.array().items(
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    let taskArray;
     try {
-      this.state = { taskArray: Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema) };
+      taskArray = Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema);
     } catch (e) {
-      this.state = { taskArray: [] };
+      taskArray = [];
       localStorage.setItem(LOCALNAME, JSON.stringify([]));
     }
-
+    this.state = {
+      taskArray,
+      taskSearchArray: taskArray,
+      isSearch: false,
+    };
     const idList = this.state.taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
   }
@@ -42,26 +47,35 @@ export default class App extends React.Component {
   handleSwitchCompleteTask = (taskObj) => {
     this.setState((state) => {
       const indexTaskObj = state.taskArray.indexOf(taskObj);
-      state.taskArray[indexTaskObj].state = state.taskArray[indexTaskObj].state ? 0 : 1;
-      localStorage.setItem(LOCALNAME, JSON.stringify(state.taskArray));
-      return state;
-    });
-  };
-
-  handleDeleteTask = (taskId) => {
-    this.setState((state) => {
-      const taskArray = state.taskArray.filter((taskObj) => taskObj.id !== taskId);
+      const taskArray = state.taskArray;
+      taskArray[indexTaskObj].state = taskArray[indexTaskObj].state ? 0 : 1;
       localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
       return { taskArray };
     });
   };
 
+  handleDeleteTask = (taskId) => {
+    this.setState((state) => {
+      const filterCallback = (taskObj) => taskObj.id !== taskId;
+      const taskArray = state.taskArray.filter(filterCallback);
+      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      return {
+        taskArray,
+        taskSearchArray: state.isSearch
+          ? state.taskSearchArray.filter(filterCallback)
+          : state.taskSearchArray,
+      };
+    });
+  };
+
   handleSearchTask = (taskValue) => {
-    // this.setState((state) => ({
-    //   taskArrayFilter: taskValue
-    //     ? state.taskArray.filter((taskObj) => taskObj.value.includes(taskValue))
-    //     : state.taskArray,
-    // }));
+    this.setState((state) => ({
+      taskSearchArray: state.taskArray.filter((taskObj) => taskObj.value.includes(taskValue)),
+    }));
+  };
+
+  handleSwitchSearchButton = () => {
+    this.setState((state) => ({ isSearch: !state.isSearch }));
   };
 
   render() {
@@ -70,9 +84,11 @@ export default class App extends React.Component {
         <HeaderControl
           onSetNewTask={this.handleSetNewTask}
           onSearchTask={this.handleSearchTask}
+          onClickSearchButton={this.handleSwitchSearchButton}
+          isSearch={this.state.isSearch}
         />
         <TaskList
-          taskArray={this.state.taskArray}
+          taskArray={this.state.isSearch ? this.state.taskSearchArray : this.state.taskArray}
           onCompleteTask={this.handleSwitchCompleteTask}
           onDeleteTask={this.handleDeleteTask}
         />

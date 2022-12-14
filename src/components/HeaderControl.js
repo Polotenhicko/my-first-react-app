@@ -6,39 +6,34 @@ export class HeaderControl extends React.Component {
     super(props);
     this.state = {
       value: '',
-      isSearch: false,
     };
   }
 
   handleInput = (e) => {
-    this.setState({
-      value: e.target.value,
+    this.setState((state) => {
+      const value = e.target.value;
+      if (this.props.isSearch) this.props.onSearchTask(value);
+      return { value };
     });
   };
 
   handleForm = (e) => {
     e.preventDefault();
     if (!this.state.value) return;
-    if (this.state.isSearch) {
+    if (this.props.isSearch) {
       this.props.onSearchTask(this.state.value);
     } else {
       this.props.onSetNewTask(this.state.value);
     }
   };
 
-  handleClickSearch = (e) => {
+  handleClickSearchButton = (e) => {
     // выносить выше или нет? уже забыл вопрос
     // если стэйт асинк, то как лучше проверять ласт значение?
-    this.setState((state) => {
-      if (state.isSearch) {
-        this.props.onSearchTask('');
-        return { isSearch: false };
-      }
-      if (state.value) {
-        this.props.onSearchTask(this.state.value);
-      }
-      return { isSearch: true };
-    });
+    if (!this.props.isSearch) {
+      this.props.onSearchTask(this.state.value);
+    }
+    this.props.onClickSearchButton();
   };
 
   render() {
@@ -50,13 +45,13 @@ export class HeaderControl extends React.Component {
           onChange={this.handleInput}
           value={this.state.value}
         />
-        <button className="todo-submit btn" type="submit" disabled={this.state.isSearch}>
+        <button className="todo-submit btn" type="submit" disabled={this.props.isSearch}>
           Добавить
         </button>
         <button
-          className={`todo-search btn ${this.state.isSearch ? 'active' : ''}`}
+          className={`todo-search btn ${this.props.isSearch ? 'active' : ''}`}
           type="button"
-          onClick={this.handleClickSearch}
+          onClick={this.handleClickSearchButton}
         >
           <SvgSearchButton />
         </button>
