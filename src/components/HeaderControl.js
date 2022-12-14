@@ -18,13 +18,27 @@ export class HeaderControl extends React.Component {
 
   handleForm = (e) => {
     e.preventDefault();
-    if (this.state.value && !this.state.isSearch) this.props.onSetNewTask(this.state.value);
+    if (!this.state.value) return;
+    if (this.state.isSearch) {
+      this.props.onSearchTask(this.state.value);
+    } else {
+      this.props.onSetNewTask(this.state.value);
+    }
   };
 
   handleClickSearch = (e) => {
-    // выносить выше или нет?
-    this.setState((state) => (state.isSearch ? { isSearch: false } : { isSearch: true }));
-    if (this.state.value && this.state.isSearch) this.props.onSearchTask(this.state.value);
+    // выносить выше или нет? уже забыл вопрос
+    // если стэйт асинк, то как лучше проверять ласт значение?
+    this.setState((state) => {
+      if (state.isSearch) {
+        this.props.onSearchTask('');
+        return { isSearch: false };
+      }
+      if (state.value) {
+        this.props.onSearchTask(this.state.value);
+      }
+      return { isSearch: true };
+    });
   };
 
   render() {

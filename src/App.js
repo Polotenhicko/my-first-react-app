@@ -16,9 +16,7 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     try {
-      this.state = {
-        taskArray: Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema),
-      };
+      this.state = { taskArray: Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema) };
     } catch (e) {
       this.state = { taskArray: [] };
       localStorage.setItem(LOCALNAME, JSON.stringify([]));
@@ -59,7 +57,11 @@ export default class App extends React.Component {
   };
 
   handleSearchTask = (taskValue) => {
-    //
+    // this.setState((state) => ({
+    //   taskArrayFilter: taskValue
+    //     ? state.taskArray.filter((taskObj) => taskObj.value.includes(taskValue))
+    //     : state.taskArray,
+    // }));
   };
 
   render() {
