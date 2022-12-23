@@ -126,7 +126,10 @@ li {
 .task-list .task-item .task-item-value {
   padding: 5px;
   word-break: break-all;
+  display: flex;
+  align-items: center;
   width: 100%;
+  height: 100%;
 }
 
 .task-list .task-item .btn-task {

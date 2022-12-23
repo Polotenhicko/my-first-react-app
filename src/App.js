@@ -79,6 +79,7 @@ export default class App extends React.Component {
   };
 
   render() {
+    const taskArray = this.state.isSearch ? this.state.taskSearchArray : this.state.taskArray;
     return (
       <div className="App">
         <HeaderControl
@@ -88,7 +89,7 @@ export default class App extends React.Component {
           isSearch={this.state.isSearch}
         />
         <TaskList
-          taskArray={this.state.isSearch ? this.state.taskSearchArray : this.state.taskArray}
+          taskArray={taskArray}
           onCompleteTask={this.handleSwitchCompleteTask}
           onDeleteTask={this.handleDeleteTask}
         />

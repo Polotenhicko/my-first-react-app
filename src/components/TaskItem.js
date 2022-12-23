@@ -12,14 +12,20 @@ export class TaskItem extends React.Component {
     this.transitionTime = 300;
   }
 
+  componentWillUnmount() {
+    clearTimeout(this.timerId);
+  }
+
   handleTaskComplete = (e) => {
     this.props.onCompleteTask(this.props.taskObj);
   };
 
   handleTaskDelete = (e) => {
-    e.stopPropagation();
     this.setState({ deleted: true });
-    setTimeout(() => this.props.onDeleteTask(this.props.taskObj.id), this.transitionTime);
+    this.timerId = setTimeout(
+      () => this.props.onDeleteTask(this.props.taskObj.id),
+      this.transitionTime
+    );
   };
 
   render() {
@@ -31,9 +37,10 @@ export class TaskItem extends React.Component {
         style={{
           transition: this.state.deleted ? `opacity ${this.transitionTime}ms` : 'inherit',
         }}
-        onClick={this.handleTaskComplete}
       >
-        <div className="task-item-value">{this.props.taskObj.value}</div>
+        <div className="task-item-value" onClick={this.handleTaskComplete}>
+          {this.props.taskObj.value}
+        </div>
         <div className="btn-task" onClick={this.handleTaskDelete}>
           <SvgTrashCan />
         </div>
