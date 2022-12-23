@@ -17,7 +17,7 @@ export class TaskItem extends React.Component {
   }
 
   handleTaskComplete = (e) => {
-    this.props.onCompleteTask(this.props.taskObj);
+    this.props.onCompleteTask(this.props.taskObj.id);
   };
 
   handleTaskDelete = (e) => {

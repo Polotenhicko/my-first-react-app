@@ -24,10 +24,10 @@ export default class App extends React.Component {
     }
     this.state = {
       taskArray,
-      taskSearchArray: taskArray,
       isSearch: false,
+      searchValue: '',
     };
-    const idList = this.state.taskArray.map((taskObj) => taskObj.id);
+    const idList = taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
   }
 
@@ -44,11 +44,14 @@ export default class App extends React.Component {
     });
   };
 
-  handleSwitchCompleteTask = (taskObj) => {
+  handleSwitchCompleteTask = (taskId) => {
     this.setState((state) => {
-      const indexTaskObj = state.taskArray.indexOf(taskObj);
-      const taskArray = state.taskArray;
-      taskArray[indexTaskObj].state = taskArray[indexTaskObj].state ? 0 : 1;
+      const taskArray = state.taskArray.map((taskObj) => {
+        if (taskObj.id != taskId) return taskObj;
+        // Поменять с 1 на 0 и наоборот
+        taskObj.state = +!taskObj.state;
+        return taskObj;
+      });
       localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
       return { taskArray };
     });
@@ -56,22 +59,18 @@ export default class App extends React.Component {
 
   handleDeleteTask = (taskId) => {
     this.setState((state) => {
-      const filterCallback = (taskObj) => taskObj.id !== taskId;
-      const taskArray = state.taskArray.filter(filterCallback);
+      const taskArray = state.taskArray.filter((taskObj) => taskObj.id !== taskId);
       localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
       return {
         taskArray,
-        taskSearchArray: state.isSearch
-          ? state.taskSearchArray.filter(filterCallback)
-          : state.taskSearchArray,
       };
     });
   };
 
-  handleSearchTask = (taskValue) => {
-    this.setState((state) => ({
-      taskSearchArray: state.taskArray.filter((taskObj) => taskObj.value.includes(taskValue)),
-    }));
+  handleSearchTask = (searchValue) => {
+    this.setState({
+      searchValue,
+    });
   };
 
   handleSwitchSearchButton = () => {
@@ -79,7 +78,9 @@ export default class App extends React.Component {
   };
 
   render() {
-    const taskArray = this.state.isSearch ? this.state.taskSearchArray : this.state.taskArray;
+    const taskArray = this.state.isSearch
+      ? this.state.taskArray.filter((taskObj) => taskObj.value.includes(this.state.searchValue))
+      : this.state.taskArray;
     return (
       <div className="App">
         <HeaderControl
