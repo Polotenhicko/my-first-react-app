@@ -47,7 +47,7 @@ export default class App extends React.Component {
   handleSwitchCompleteTask = (taskId) => {
     this.setState((state) => {
       const taskArray = state.taskArray.map((taskObj) => {
-        if (taskObj.id != taskId) return taskObj;
+        if (taskObj.id !== taskId) return taskObj;
         // Поменять с 1 на 0 и наоборот
         taskObj.state = +!taskObj.state;
         return taskObj;
@@ -73,7 +73,7 @@ export default class App extends React.Component {
     });
   };
 
-  handleSwitchSearchButton = () => {
+  handleClickSearchButton = () => {
     this.setState((state) => ({ isSearch: !state.isSearch }));
   };
 
@@ -81,13 +81,15 @@ export default class App extends React.Component {
     const taskArray = this.state.isSearch
       ? this.state.taskArray.filter((taskObj) => taskObj.value.includes(this.state.searchValue))
       : this.state.taskArray;
+    const placeholderText = this.state.isSearch ? 'Поиск' : 'Добавить таску';
     return (
       <div className="App">
         <HeaderControl
           onSetNewTask={this.handleSetNewTask}
           onSearchTask={this.handleSearchTask}
-          onClickSearchButton={this.handleSwitchSearchButton}
+          onClickSearchButton={this.handleClickSearchButton}
           isSearch={this.state.isSearch}
+          placeholderText={placeholderText}
         />
         <TaskList
           taskArray={taskArray}

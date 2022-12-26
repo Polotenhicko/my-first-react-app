@@ -44,6 +44,7 @@ export class HeaderControl extends React.Component {
           type="text"
           onChange={this.handleInput}
           value={this.state.value}
+          placeholder={this.props.placeholderText}
         />
         <button className="todo-submit btn" type="submit" disabled={this.props.isSearch}>
           Добавить
