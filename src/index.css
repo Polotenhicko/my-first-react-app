@@ -2,8 +2,8 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, 'Roboto', BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: -apple-system, 'Roboto', BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #2b303b;
@@ -24,6 +24,11 @@ code {
 
 .btn {
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border: none;
 }
 
 button:disabled {
@@ -65,9 +70,11 @@ li {
   width: 100%;
 }
 
+.task-list .btn {
+  background-color: transparent;
+}
+
 .todo-header .btn {
-  outline: none;
-  border: none;
   border-radius: 5px;
   transition: all 0.25s;
 }
@@ -168,4 +175,12 @@ li {
 .todo-header .todo-search svg {
   width: 64px;
   height: 46px;
+}
+
+.todo-header .todo-settings {
+  padding: 0 8px;
+}
+
+.todo-header .todo-settings svg {
+  width: 75px;
 }

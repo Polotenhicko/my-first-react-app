@@ -1,5 +1,6 @@
 import React from 'react';
 import { SvgSearchButton } from '../assets/icons/SvgSearchButton';
+import { SvgGear } from '../assets/icons/SvgGear';
 
 export class HeaderControl extends React.Component {
   constructor(props) {
@@ -46,13 +47,22 @@ export class HeaderControl extends React.Component {
           value={this.state.value}
           placeholder={this.props.placeholderText}
         />
-        <button className="todo-submit btn" type="submit" disabled={this.props.isSearch}>
+        <button
+          className="todo-submit btn"
+          type="submit"
+          disabled={this.props.isSearch}
+          title="Добавить"
+        >
           Добавить
+        </button>
+        <button className="todo-settings btn" title="Настройки">
+          <SvgGear />
         </button>
         <button
           className={`todo-search btn ${this.props.isSearch ? 'active' : ''}`}
           type="button"
           onClick={this.handleClickSearchButton}
+          title="Поиск"
         >
           <SvgSearchButton />
         </button>

@@ -22,10 +22,7 @@ export class TaskItem extends React.Component {
 
   handleTaskDelete = (e) => {
     this.setState({ deleted: true });
-    this.timerId = setTimeout(
-      () => this.props.onDeleteTask(this.props.taskObj.id),
-      this.transitionTime
-    );
+    this.timerId = setTimeout(() => this.props.onDeleteTask(this.props.taskObj.id), this.transitionTime);
   };
 
   render() {
@@ -41,9 +38,9 @@ export class TaskItem extends React.Component {
         <div className="task-item-value" onClick={this.handleTaskComplete}>
           {this.props.taskObj.value}
         </div>
-        <div className="btn-task" onClick={this.handleTaskDelete}>
+        <button className="btn-task btn" onClick={this.handleTaskDelete}>
           <SvgTrashCan />
-        </div>
+        </button>
       </li>
     );
   }
