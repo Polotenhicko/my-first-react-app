@@ -55,7 +55,7 @@ export class HeaderControl extends React.Component {
         >
           Добавить
         </button>
-        <button className="todo-settings btn" title="Настройки">
+        <button className="todo-settings btn" type="button" title="Настройки">
           <SvgGear />
         </button>
         <button

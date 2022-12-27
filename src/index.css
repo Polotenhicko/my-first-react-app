@@ -89,10 +89,10 @@ li {
   flex-direction: column;
   justify-content: center;
   row-gap: 15px;
-  transition: all 0.25s;
 }
 
 .task-list .task-item {
+  transition: all 0.3s;
   display: flex;
   position: relative;
   justify-content: space-between;
@@ -117,12 +117,12 @@ li {
   border-radius: 50% 50% 0 0;
 }
 
-.task-list .task-item.task-item.completed {
+.task-list .task-item.completed {
   color: #fff;
   background-color: #00ab00;
 }
 
-.task-list .task-item.task-item.completed svg path {
+.task-list .task-item.completed svg path {
   fill: #fff;
 }
 

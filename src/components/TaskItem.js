@@ -7,34 +7,36 @@ export class TaskItem extends React.Component {
     super(props);
     this.state = {
       deleted: false,
+      state: this.props.taskObj.state,
     };
     // мс
     this.transitionTime = 300;
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timerId);
+    clearTimeout(this.timerIdDelete);
+    clearTimeout(this.timerIdComplete);
   }
 
   handleTaskComplete = (e) => {
-    this.props.onCompleteTask(this.props.taskObj.id);
+    this.setState((state) => ({ state: +!state.state }));
+    this.timerIdComplete = setTimeout(
+      () => this.props.onCompleteTask(this.props.taskObj.id),
+      this.transitionTime
+    );
   };
 
   handleTaskDelete = (e) => {
     this.setState({ deleted: true });
-    this.timerId = setTimeout(() => this.props.onDeleteTask(this.props.taskObj.id), this.transitionTime);
+    this.timerIdDelete = setTimeout(
+      () => this.props.onDeleteTask(this.props.taskObj.id),
+      this.transitionTime
+    );
   };
 
   render() {
     return (
-      <li
-        className={`task-item ${STATELIST[this.props.taskObj.state]} ${
-          this.state.deleted ? 'deleted' : ''
-        }`}
-        style={{
-          transition: this.state.deleted ? `opacity ${this.transitionTime}ms` : 'inherit',
-        }}
-      >
+      <li className={`task-item ${STATELIST[this.state.state]} ${this.state.deleted ? 'deleted' : ''}`}>
         <div className="task-item-value" onClick={this.handleTaskComplete}>
           {this.props.taskObj.value}
         </div>

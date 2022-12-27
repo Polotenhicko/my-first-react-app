@@ -26,6 +26,9 @@ export default class App extends React.Component {
       taskArray,
       isSearch: false,
       searchValue: '',
+      options: {
+        isCompletedInEnd: true,
+      },
     };
     const idList = taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
@@ -52,6 +55,12 @@ export default class App extends React.Component {
         taskObj.state = +!taskObj.state;
         return taskObj;
       });
+      if (state.options.isCompletedInEnd) {
+        const indexTask = taskArray.findIndex(({ id }) => id === taskId);
+        const objTask = taskArray[indexTask];
+        taskArray.splice(indexTask, 1);
+        taskArray.push(objTask);
+      }
       localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
       return { taskArray };
     });
@@ -77,6 +86,14 @@ export default class App extends React.Component {
     this.setState((state) => ({ isSearch: !state.isSearch }));
   };
 
+  handleOptionsTaskArray(taskArray, { isCompletedInEnd = false } = {}) {
+    let copyTaskArray = [...taskArray];
+    if (isCompletedInEnd) {
+      copyTaskArray.sort(({ state: stateA }, { state: stateB }) => stateA - stateB);
+    }
+    return copyTaskArray;
+  }
+
   render() {
     const taskArray = this.state.isSearch
       ? this.state.taskArray.filter((taskObj) => taskObj.value.includes(this.state.searchValue))
@@ -92,7 +109,7 @@ export default class App extends React.Component {
           placeholderText={placeholderText}
         />
         <TaskList
-          taskArray={taskArray}
+          taskArray={this.handleOptionsTaskArray(taskArray, this.state.options)}
           onCompleteTask={this.handleSwitchCompleteTask}
           onDeleteTask={this.handleDeleteTask}
         />
