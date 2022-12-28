@@ -14,7 +14,7 @@ export class ModalSettings extends React.Component {
   }
 
   onCloseModal = (e) => {
-    if (e.target == e.currentTarget || e.target.closest('svg').hasAttribute('data-modal-close')) {
+    if (e.target == e.currentTarget || e.target.closest('svg')?.hasAttribute('data-modal-close')) {
       this.modalWrapper.current.classList.remove('active');
       this.timerRemoveActive = setTimeout(() => this.props.onCloseModal(), 400);
     }
