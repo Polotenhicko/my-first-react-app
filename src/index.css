@@ -189,14 +189,61 @@ li {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .modal-wrapper {
-  min-width: 300px;
-  min-height: 300px;
+  padding: 10px 30px;
+  margin: 0 auto;
+  box-shadow: rgb(0 0 0 / 12%) 0 1px 6px, rgb(0 0 0 / 12%) 0 1px 4px;
+  background-color: #fff;
+  border-radius: 6px;
+  color: #212121;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  row-gap: 15px;
+  justify-content: space-between;
+  transition: all 0.5s;
+  transform: scale(0);
+  cursor: auto;
+  position: relative;
+}
+
+.modal-wrapper.active {
+  transform: scale(1);
+}
+
+.modal-wrapper .modal-title {
+  font-size: 32px;
+}
+
+.modal-wrapper .modal-body {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+}
+
+.modal-wrapper .option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 15px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.modal-wrapper .modal-title-close {
+  width: 24px;
+  height: 24px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
 }

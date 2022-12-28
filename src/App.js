@@ -89,13 +89,16 @@ export default class App extends React.Component {
     this.setState((state) => ({ isSearch: !state.isSearch }));
   };
 
-  handleOptionsTaskArray(taskArray, { isCompletedInEnd = false } = {}) {
+  handleOptionsTaskArray = (taskArray, { isCompletedInEnd = false } = {}) => {
     let copyTaskArray = [...taskArray];
-    if (isCompletedInEnd) {
-      copyTaskArray.sort(({ state: stateA }, { state: stateB }) => stateA - stateB);
-    }
+    if (isCompletedInEnd) copyTaskArray = this.getCompletedInEnd(copyTaskArray);
     return copyTaskArray;
-  }
+  };
+
+  getCompletedInEnd = (taskArray) => {
+    const copyTaskArray = [...taskArray];
+    return copyTaskArray.sort(({ state: stateA }, { state: stateB }) => stateA - stateB);
+  };
 
   handleShowModal = () => {
     this.setState({ isModal: true });
@@ -135,7 +138,11 @@ export default class App extends React.Component {
         />
         {this.state.isModal && (
           <Modal>
-            <ModalSettings onCloseModal={this.handleCloseModal} />
+            <ModalSettings
+              options={this.state.options}
+              onCheckBoxModal={this.handleCheckBoxModal}
+              onCloseModal={this.handleCloseModal}
+            />
           </Modal>
         )}
       </div>
