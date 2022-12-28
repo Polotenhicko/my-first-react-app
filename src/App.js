@@ -3,6 +3,8 @@ import Joi from 'joi';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
 import { LOCALNAME } from './constant';
+import { Modal } from './components/Modal/Modal';
+import { ModalSettings } from './components/Modal/ModalSettings';
 
 const taskSchema = Joi.array().items(
   Joi.object({
@@ -25,6 +27,7 @@ export default class App extends React.Component {
     this.state = {
       taskArray,
       isSearch: false,
+      isModal: false,
       searchValue: '',
       options: {
         isCompletedInEnd: true,
@@ -94,6 +97,22 @@ export default class App extends React.Component {
     return copyTaskArray;
   }
 
+  handleShowModal = () => {
+    this.setState({ isModal: true });
+  };
+
+  handleCloseModal = () => {
+    this.setState({ isModal: false });
+  };
+
+  handleCheckBoxModal = (e) => {
+    this.setState({
+      options: {
+        isCompletedInEnd: e.target.checked,
+      },
+    });
+  };
+
   render() {
     const taskArray = this.state.isSearch
       ? this.state.taskArray.filter((taskObj) => taskObj.value.includes(this.state.searchValue))
@@ -105,6 +124,7 @@ export default class App extends React.Component {
           onSetNewTask={this.handleSetNewTask}
           onSearchTask={this.handleSearchTask}
           onClickSearchButton={this.handleClickSearchButton}
+          onShowModal={this.handleShowModal}
           isSearch={this.state.isSearch}
           placeholderText={placeholderText}
         />
@@ -113,6 +133,11 @@ export default class App extends React.Component {
           onCompleteTask={this.handleSwitchCompleteTask}
           onDeleteTask={this.handleDeleteTask}
         />
+        {this.state.isModal && (
+          <Modal>
+            <ModalSettings onCloseModal={this.handleCloseModal} />
+          </Modal>
+        )}
       </div>
     );
   }

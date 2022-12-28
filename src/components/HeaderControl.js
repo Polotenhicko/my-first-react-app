@@ -37,6 +37,10 @@ export class HeaderControl extends React.Component {
     this.props.onClickSearchButton();
   };
 
+  handleClickSettings = (e) => {
+    this.props.onShowModal();
+  };
+
   render() {
     return (
       <form className="todo-header" onSubmit={this.handleForm}>
@@ -55,7 +59,12 @@ export class HeaderControl extends React.Component {
         >
           Добавить
         </button>
-        <button className="todo-settings btn" type="button" title="Настройки">
+        <button
+          className="todo-settings btn"
+          type="button"
+          title="Настройки"
+          onClick={this.handleClickSettings}
+        >
           <SvgGear />
         </button>
         <button
