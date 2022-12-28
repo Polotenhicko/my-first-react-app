@@ -30,7 +30,7 @@ export default class App extends React.Component {
       isModal: false,
       searchValue: '',
       options: {
-        isCompletedInEnd: true,
+        isCompletedInEnd: false,
       },
     };
     const idList = taskArray.map((taskObj) => taskObj.id);
