@@ -194,8 +194,8 @@ li {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .modal-wrapper {
@@ -216,7 +216,7 @@ li {
   position: relative;
 }
 
-.modal-wrapper.active {
+.modal.active .modal-wrapper {
   transform: scale(1);
 }
 
