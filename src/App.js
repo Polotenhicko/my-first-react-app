@@ -1,7 +1,13 @@
 import React from 'react';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
-import { LOCALNAME, getTasksArray } from './constant';
+import {
+  LOCALNAME_TASKS,
+  LOCALNAME_OPTIONS,
+  getTasksArray,
+  getOptionsObject,
+  optionsDefaultModel,
+} from './constant';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
 
@@ -9,23 +15,32 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     let taskArray;
+    let options;
+    // Получение тасок
     try {
-      // taskArray = Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema);
-      const resultValidate = getTasksArray(JSON.parse(localStorage[LOCALNAME]));
+      const resultValidate = getTasksArray(JSON.parse(localStorage[LOCALNAME_TASKS]));
       taskArray = resultValidate.taskArray;
-      if (resultValidate.isOld) localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      if (resultValidate.isOld) localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
     } catch (e) {
       taskArray = [];
-      localStorage.setItem(LOCALNAME, JSON.stringify([]));
+      localStorage.setItem(LOCALNAME_TASKS, JSON.stringify([]));
     }
+    // Получение настроек
+    try {
+      options = getOptionsObject(JSON.parse(localStorage[LOCALNAME_OPTIONS]));
+    } catch (e) {
+      options = { ...optionsDefaultModel };
+      localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
+    }
+
+    console.log(options);
+
     this.state = {
       taskArray,
       isSearch: false,
       isModal: false,
       searchValue: '',
-      options: {
-        isCompletedInEnd: false,
-      },
+      options,
     };
     const idList = taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
@@ -41,7 +56,7 @@ export default class App extends React.Component {
     };
     this.setState((state) => {
       const taskArray = [...state.taskArray, taskObj];
-      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
       return { taskArray };
     });
   };
@@ -60,7 +75,7 @@ export default class App extends React.Component {
         taskArray.splice(indexTask, 1);
         taskArray.push(objTask);
       }
-      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
       return { taskArray };
     });
   };
@@ -68,7 +83,7 @@ export default class App extends React.Component {
   handleDeleteTask = (taskId) => {
     this.setState((state) => {
       const taskArray = state.taskArray.filter((taskObj) => taskObj.id !== taskId);
-      localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
+      localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
       return {
         taskArray,
       };
@@ -104,11 +119,13 @@ export default class App extends React.Component {
     this.setState({ isModal: false });
   };
 
-  handleCheckBoxModal = (e) => {
-    this.setState({
-      options: {
-        isCompletedInEnd: e.target.checked,
-      },
+  changeOptions = (value, option) => {
+    this.setState((state) => {
+      const options = { ...state.options };
+      options[option] = value;
+      console.log(options);
+      localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
+      return { options };
     });
   };
 
@@ -136,7 +153,7 @@ export default class App extends React.Component {
           <Modal>
             <ModalSettings
               options={this.state.options}
-              onCheckBoxModal={this.handleCheckBoxModal}
+              onChangeOptions={this.changeOptions}
               onCloseModal={this.closeModal}
             />
           </Modal>
@@ -159,4 +176,8 @@ export default class App extends React.Component {
   {id: 0, value: 'aboba', isCompleted: false, dateStart: 123, dateEnd: 124}
 ]
 
+Настройки
+{
+
+}
 */

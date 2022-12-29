@@ -1,6 +1,5 @@
 import React from 'react';
 import { SvgTrashCan } from '../assets/icons/SvgTrashCan';
-import { STATELIST } from '../constant';
 
 export class TaskItem extends React.Component {
   constructor(props) {

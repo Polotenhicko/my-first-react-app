@@ -20,6 +20,10 @@ export class ModalSettings extends React.Component {
     }
   };
 
+  handleIsCompletedInEnd = (e) => {
+    this.props.onChangeOptions(e.target.checked, 'isCompletedInEnd');
+  };
+
   render() {
     return (
       <div className="modal" onClick={this.onCloseModal} ref={this.modal}>
@@ -34,7 +38,7 @@ export class ModalSettings extends React.Component {
                 type="checkbox"
                 id="isCompletedInEnd"
                 checked={this.props.options.isCompletedInEnd}
-                onChange={this.props.onCheckBoxModal}
+                onChange={this.handleIsCompletedInEnd}
               />
               <label htmlFor="isCompletedInEnd">Выполненные таски уходят в конец</label>
             </div>

@@ -1,32 +1,48 @@
-export const LOCALNAME = '__taskArray';
-export const STATELIST = {
-  0: 'active',
-  1: 'completed',
-};
-export const dataModels = {
-  taskObject: {
-    id: 'number',
-    value: 'string',
-    isCompleted: 'boolean',
-    dateStart: 'number',
-    dateEnd: 'number',
+export const LOCALNAME_TASKS = '__taskArray';
+export const LOCALNAME_OPTIONS = '__taskOptions';
+export const DATA_MODELS = {
+  tasks: {
+    taskObject: {
+      id: 'number',
+      value: 'string',
+      isCompleted: 'boolean',
+      dateStart: 'number',
+      dateEnd: 'number',
+    },
+    oldTaskObject: {
+      id: 'number',
+      value: 'string',
+      state: 'number',
+    },
   },
-  oldTaskObject: {
-    id: 'number',
-    value: 'string',
-    state: 'number',
+  options: {
+    isCompletedInEnd: 'boolean',
   },
 };
+export const isObject = (obj) => typeof obj === 'object' && obj && !Array.isArray(obj);
+export const optionsDefaultModel = {
+  isCompletedInEnd: false,
+};
+export function getOptionsObject(optionsParsed) {
+  if (!isObject(optionsParsed)) throw new Error('Это не объект');
+  if (Object.keys(optionsParsed).length !== Object.keys(DATA_MODELS.options).length)
+    throw new Error('Настройки не совпадают');
+  for (const [key, type] of Object.entries(DATA_MODELS.options)) {
+    if (!optionsParsed.hasOwnProperty(key) || typeof optionsParsed[key] !== type)
+      throw new Error('Не совпадает с моделью');
+  }
+  return optionsParsed;
+}
 export function getTasksArray(taskArrayParsed) {
   let taskArray;
   let isOld = false;
   try {
     if (!Array.isArray(taskArrayParsed)) throw new Error('Не массив');
     // получить валидный массив на основе старой модели
-    taskArray = getValidTasks(taskArrayParsed, dataModels.taskObject);
+    taskArray = getValidTasks(taskArrayParsed, DATA_MODELS.tasks.taskObject);
     // если пустой, то след модель, мб какой-то обработчик со списком сделать
     if (!taskArray.length) {
-      taskArray = getValidTasks(taskArrayParsed, dataModels.oldTaskObject);
+      taskArray = getValidTasks(taskArrayParsed, DATA_MODELS.tasks.oldTaskObject);
       isOld = true;
     }
   } catch (e) {
@@ -38,7 +54,7 @@ function getValidTasks(array, dataModel) {
   const taskArray = [];
   for (const taskObject of array) {
     // Проверка на объект
-    if (typeof taskObject !== 'object' || !taskObject || Array.isArray(taskObject)) continue;
+    if (!isObject(taskObject)) continue;
     // то что это валидный объект, иначе некст объект
     const obj = getValidObjectTask(taskObject, dataModel);
     if (obj) taskArray.push(obj);
@@ -52,7 +68,7 @@ function getValidObjectTask(object, dataModel) {
   }
   // новый объект будет таким, если старая модель такая-то
   switch (dataModel) {
-    case dataModels.oldTaskObject:
+    case DATA_MODELS.tasks.oldTaskObject:
       taskObject = {
         id: object.id,
         value: object.value,
@@ -61,10 +77,15 @@ function getValidObjectTask(object, dataModel) {
         dateEnd: object.state ? Date.now() : 0,
       };
       break;
-    case dataModels.taskObject:
+    case DATA_MODELS.tasks.taskObject:
       taskObject = object;
       break;
   }
   // валидный объект, либо undefined
   return taskObject;
 }
+
+// STATELIST = {
+//   0: 'active',
+//   1: 'completed',
+// };
