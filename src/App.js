@@ -65,7 +65,6 @@ export default class App extends React.Component {
     this.setState((state) => {
       const taskArray = state.taskArray.map((taskObj) => {
         if (taskObj.id !== taskId) return taskObj;
-        // Поменять с 1 на 0 и наоборот
         taskObj.isCompleted = !taskObj.isCompleted;
         return taskObj;
       });
