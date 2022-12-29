@@ -1,25 +1,19 @@
 import React from 'react';
-import Joi from 'joi';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
-import { LOCALNAME } from './constant';
+import { LOCALNAME, getTasksArray } from './constant';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
-
-const taskSchema = Joi.array().items(
-  Joi.object({
-    id: Joi.number(),
-    value: Joi.string(),
-    state: Joi.number().integer().min(0).max(1),
-  })
-);
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     let taskArray;
     try {
-      taskArray = Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema);
+      // taskArray = Joi.attempt(JSON.parse(localStorage[LOCALNAME]), taskSchema);
+      const resultValidate = getTasksArray(JSON.parse(localStorage[LOCALNAME]));
+      taskArray = resultValidate.taskArray;
+      if (resultValidate.isOld) localStorage.setItem(LOCALNAME, JSON.stringify(taskArray));
     } catch (e) {
       taskArray = [];
       localStorage.setItem(LOCALNAME, JSON.stringify([]));
@@ -41,7 +35,9 @@ export default class App extends React.Component {
     const taskObj = {
       id: ++this.maxId,
       value: taskValue,
-      state: 0,
+      isCompleted: false,
+      dateStart: Date.now(),
+      dateEnd: 0,
     };
     this.setState((state) => {
       const taskArray = [...state.taskArray, taskObj];
@@ -55,7 +51,7 @@ export default class App extends React.Component {
       const taskArray = state.taskArray.map((taskObj) => {
         if (taskObj.id !== taskId) return taskObj;
         // Поменять с 1 на 0 и наоборот
-        taskObj.state = +!taskObj.state;
+        taskObj.isCompleted = !taskObj.isCompleted;
         return taskObj;
       });
       if (state.options.isCompletedInEnd) {
@@ -97,7 +93,7 @@ export default class App extends React.Component {
 
   getCompletedInEnd = (taskArray) => {
     const copyTaskArray = [...taskArray];
-    return copyTaskArray.sort(({ state: stateA }, { state: stateB }) => stateA - stateB);
+    return copyTaskArray.sort((taskObjA, taskObjB) => taskObjA.isCompleted - taskObjB.isCompleted);
   };
 
   showModal = () => {

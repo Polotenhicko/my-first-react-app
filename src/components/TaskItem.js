@@ -7,7 +7,7 @@ export class TaskItem extends React.Component {
     super(props);
     this.state = {
       deleted: false,
-      state: this.props.taskObj.state,
+      isCompleted: this.props.taskObj.isCompleted,
     };
     // мс
     this.transitionTime = 300;
@@ -19,7 +19,7 @@ export class TaskItem extends React.Component {
   }
 
   handleTaskComplete = (e) => {
-    this.setState((state) => ({ state: +!state.state }));
+    this.setState((state) => ({ isCompleted: !state.isCompleted }));
     this.timerIdComplete = setTimeout(
       () => this.props.onCompleteTask(this.props.taskObj.id),
       this.transitionTime
@@ -36,7 +36,11 @@ export class TaskItem extends React.Component {
 
   render() {
     return (
-      <li className={`task-item ${STATELIST[this.state.state]} ${this.state.deleted ? 'deleted' : ''}`}>
+      <li
+        className={`task-item ${this.state.isCompleted ? 'completed' : 'active'} ${
+          this.state.deleted ? 'deleted' : ''
+        }`}
+      >
         <div className="task-item-value" onClick={this.handleTaskComplete}>
           {this.props.taskObj.value}
         </div>

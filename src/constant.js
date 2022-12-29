@@ -17,19 +17,22 @@ export const dataModels = {
     state: 'number',
   },
 };
-export function getTasksArray(json) {
+export function getTasksArray(taskArrayParsed) {
   let taskArray;
+  let isOld = false;
   try {
-    const taskArrayParsed = JSON.parse(json);
     if (!Array.isArray(taskArrayParsed)) throw new Error('Не массив');
     // получить валидный массив на основе старой модели
     taskArray = getValidTasks(taskArrayParsed, dataModels.taskObject);
     // если пустой, то след модель, мб какой-то обработчик со списком сделать
-    if (!taskArray.length) taskArray = getValidTasks(taskArrayParsed, dataModels.oldTaskObject);
+    if (!taskArray.length) {
+      taskArray = getValidTasks(taskArrayParsed, dataModels.oldTaskObject);
+      isOld = true;
+    }
   } catch (e) {
     taskArray = [];
   }
-  return taskArray;
+  return { taskArray, isOld };
 }
 function getValidTasks(array, dataModel) {
   const taskArray = [];
