@@ -100,11 +100,11 @@ export default class App extends React.Component {
     return copyTaskArray.sort(({ state: stateA }, { state: stateB }) => stateA - stateB);
   };
 
-  handleShowModal = () => {
+  showModal = () => {
     this.setState({ isModal: true });
   };
 
-  handleCloseModal = () => {
+  closeModal = () => {
     this.setState({ isModal: false });
   };
 
@@ -127,7 +127,7 @@ export default class App extends React.Component {
           onSetNewTask={this.handleSetNewTask}
           onSearchTask={this.handleSearchTask}
           onClickSearchButton={this.handleClickSearchButton}
-          onShowModal={this.handleShowModal}
+          onShowModal={this.showModal}
           isSearch={this.state.isSearch}
           placeholderText={placeholderText}
         />
@@ -141,7 +141,7 @@ export default class App extends React.Component {
             <ModalSettings
               options={this.state.options}
               onCheckBoxModal={this.handleCheckBoxModal}
-              onCloseModal={this.handleCloseModal}
+              onCloseModal={this.closeModal}
             />
           </Modal>
         )}
@@ -153,6 +153,14 @@ export default class App extends React.Component {
 
 [
 	{id: 0, value: 'aboba', state: 0}
+]
+
+*/
+
+/* 
+Новая модель данных
+[
+  {id: 0, value: 'aboba', isCompleted: false, dateStart: 123, dateEnd: 124}
 ]
 
 */

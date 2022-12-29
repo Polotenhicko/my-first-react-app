@@ -239,6 +239,10 @@ li {
   cursor: pointer;
 }
 
+.modal-wrapper .option label {
+  cursor: pointer;
+}
+
 .modal-wrapper .modal-title-close {
   width: 24px;
   height: 24px;
