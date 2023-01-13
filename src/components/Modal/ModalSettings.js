@@ -5,10 +5,12 @@ export class ModalSettings extends React.Component {
   modal = React.createRef();
 
   componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown);
     this.timerAddActive = setTimeout(() => this.modal.current.classList.add('active'));
   }
 
   componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
     clearTimeout(this.timerAddActive);
     clearTimeout(this.timerRemoveActive);
   }
@@ -18,6 +20,10 @@ export class ModalSettings extends React.Component {
       this.modal.current.classList.remove('active');
       this.timerRemoveActive = setTimeout(() => this.props.onCloseModal(), 400);
     }
+  };
+
+  onKeyDown = (e) => {
+    if (e.keyCode === 27) this.modal.current.click();
   };
 
   handleIsCompletedInEnd = (e) => {

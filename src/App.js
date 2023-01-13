@@ -33,8 +33,6 @@ export default class App extends React.Component {
       localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
     }
 
-    console.log(options);
-
     this.state = {
       taskArray,
       isSearch: false,
