@@ -5,6 +5,8 @@ import { LOCALNAME_TASKS, LOCALNAME_OPTIONS, optionsDefaultModel } from './const
 import { getTasksArray, getOptionsObject } from './services/index';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
+import { ThemeToggle } from './components/ThemeToggle';
+import { ThemeContext } from './theme-context';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -34,6 +36,7 @@ export default class App extends React.Component {
       isModal: false,
       searchValue: '',
       options,
+      theme: 'dark',
     };
     const idList = taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
@@ -115,10 +118,13 @@ export default class App extends React.Component {
     this.setState((state) => {
       const options = { ...state.options };
       options[option] = value;
-      console.log(options);
       localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
       return { options };
     });
+  };
+
+  changeTheme = (theme) => {
+    this.setState({ theme });
   };
 
   render() {
@@ -127,30 +133,33 @@ export default class App extends React.Component {
       : this.state.taskArray;
     const placeholderText = this.state.isSearch ? 'Поиск' : 'Добавить таску';
     return (
-      <div className="App">
-        <HeaderControl
-          onSetNewTask={this.handleSetNewTask}
-          onSearchTask={this.handleSearchTask}
-          onClickSearchButton={this.handleClickSearchButton}
-          onShowModal={this.showModal}
-          isSearch={this.state.isSearch}
-          placeholderText={placeholderText}
-        />
-        <TaskList
-          taskArray={this.handleOptionsTaskArray(taskArray, this.state.options)}
-          onCompleteTask={this.handleSwitchCompleteTask}
-          onDeleteTask={this.handleDeleteTask}
-        />
-        {this.state.isModal && (
-          <Modal>
-            <ModalSettings
-              options={this.state.options}
-              onChangeOptions={this.changeOptions}
-              onCloseModal={this.closeModal}
-            />
-          </Modal>
-        )}
-      </div>
+      <ThemeContext.Provider value={this.state.theme}>
+        <div className="App">
+          <HeaderControl
+            onSetNewTask={this.handleSetNewTask}
+            onSearchTask={this.handleSearchTask}
+            onClickSearchButton={this.handleClickSearchButton}
+            onShowModal={this.showModal}
+            isSearch={this.state.isSearch}
+            placeholderText={placeholderText}
+          />
+          <TaskList
+            taskArray={this.handleOptionsTaskArray(taskArray, this.state.options)}
+            onCompleteTask={this.handleSwitchCompleteTask}
+            onDeleteTask={this.handleDeleteTask}
+          />
+          <ThemeToggle onChangeTheme={this.changeTheme} />
+          {this.state.isModal && (
+            <Modal>
+              <ModalSettings
+                options={this.state.options}
+                onChangeOptions={this.changeOptions}
+                onCloseModal={this.closeModal}
+              />
+            </Modal>
+          )}
+        </div>
+      </ThemeContext.Provider>
     );
   }
 }
