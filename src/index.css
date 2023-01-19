@@ -262,3 +262,11 @@ li {
   height: 100px;
   cursor: pointer;
 }
+
+@media (max-width: 1050px) {
+  .theme-toggle {
+    left: 10px;
+    bottom: 10px;
+    top: auto;
+  }
+}
