@@ -1,13 +1,8 @@
 import React from 'react';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
-import {
-  LOCALNAME_TASKS,
-  LOCALNAME_OPTIONS,
-  getTasksArray,
-  getOptionsObject,
-  optionsDefaultModel,
-} from './constant';
+import { LOCALNAME_TASKS, LOCALNAME_OPTIONS, optionsDefaultModel } from './constant';
+import { getTasksArray, getOptionsObject } from './services/index';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
 
