@@ -25,20 +25,15 @@ export class HeaderControl extends React.Component {
       this.props.onSearchTask(this.state.value);
     } else {
       this.props.onSetNewTask(this.state.value);
+      this.setState({ value: '' });
     }
   };
 
   handleClickSearchButton = (e) => {
-    // выносить выше или нет? уже забыл вопрос
-    // если стэйт асинк, то как лучше проверять ласт значение?
     if (!this.props.isSearch) {
       this.props.onSearchTask(this.state.value);
     }
     this.props.onClickSearchButton();
-  };
-
-  handleClickSettings = (e) => {
-    this.props.onShowModal();
   };
 
   render() {
@@ -63,7 +58,7 @@ export class HeaderControl extends React.Component {
           className="todo-settings btn"
           type="button"
           title="Настройки"
-          onClick={this.handleClickSettings}
+          onClick={this.props.onShowModal}
         >
           <SvgGear />
         </button>
