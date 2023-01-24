@@ -1,7 +1,26 @@
-import { DATA_MODELS, LOCALNAME_TASKS, LOCALNAME_OPTIONS, optionsDefaultModel } from '../constant';
+import {
+  DATA_MODELS,
+  LOCALNAME_TASKS,
+  LOCALNAME_OPTIONS,
+  LOCALNAME_THEME,
+  optionsDefaultModel,
+} from '../constant';
+import { ThemeStyle } from '../theme-context';
 
 export const isObject = (obj) => typeof obj === 'object' && obj && !Array.isArray(obj);
 
+export function getTheme() {
+  let theme;
+  try {
+    theme = localStorage[LOCALNAME_THEME];
+    if (!ThemeStyle[theme]) throw new Error('Неверная тема');
+  } catch (e) {
+    console.error(e);
+    theme = Object.keys(ThemeStyle)[0];
+    localStorage.setItem(LOCALNAME_THEME, theme);
+  }
+  return theme;
+}
 // нет проверок с моделью данных на массив/объект/null, т.к. используется просто typeof
 export function getOptionsObject() {
   let options;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
-import { getTaskArray, getOptionsObject } from './services/index';
-import { LOCALNAME_TASKS, LOCALNAME_OPTIONS } from './constant';
+import { getTaskArray, getOptionsObject, getTheme } from './services/index';
+import { LOCALNAME_TASKS, LOCALNAME_OPTIONS, LOCALNAME_THEME } from './constant';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
 import { ThemeToggle } from './components/ThemeToggle';
-import { ThemeContext } from './theme-context';
+import { ThemeContext, ThemeStyle } from './theme-context';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -15,13 +15,15 @@ export default class App extends React.Component {
     const taskArray = getTaskArray();
     // Получение настроек
     const options = getOptionsObject();
+    // Получение темы
+    const theme = getTheme();
     this.state = {
       taskArray,
       isSearch: false,
       isModal: false,
       searchValue: '',
       options,
-      theme: 'dark',
+      theme,
     };
     const idList = taskArray.map((taskObj) => taskObj.id);
     this.maxId = idList.length ? Math.max(...idList) : -1;
@@ -109,6 +111,8 @@ export default class App extends React.Component {
   };
 
   changeTheme = (theme) => {
+    document.body.style.backgroundColor = ThemeStyle[theme].backgroundColor;
+    localStorage.setItem(LOCALNAME_THEME, theme);
     this.setState({ theme });
   };
 

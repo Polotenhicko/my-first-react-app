@@ -1,5 +1,6 @@
 export const LOCALNAME_TASKS = '__taskArray';
 export const LOCALNAME_OPTIONS = '__taskOptions';
+export const LOCALNAME_THEME = '__theme';
 export const DATA_MODELS = {
   tasks: {
     taskObject: {

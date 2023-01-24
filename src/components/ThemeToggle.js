@@ -6,6 +6,10 @@ import { SvgSun } from '../assets/icons/SvgSun';
 export class ThemeToggle extends React.Component {
   static contextType = ThemeContext;
 
+  componentDidMount() {
+    this.props.onChangeTheme(this.context);
+  }
+
   handleClickTheme = () => {
     const nextTheme = this.context == 'dark' ? 'light' : 'dark';
     this.props.onChangeTheme(nextTheme);
