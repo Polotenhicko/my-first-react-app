@@ -9,7 +9,10 @@ export default class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    this.setState({ hasError: true });
+    this.setState(() => {
+      this.props.onDeleteTask?.(+error.message);
+      return { hasError: true };
+    });
   }
 
   render() {

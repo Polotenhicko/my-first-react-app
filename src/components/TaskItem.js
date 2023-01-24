@@ -18,6 +18,7 @@ export class TaskItem extends React.Component {
   }
 
   handleTaskComplete = (e) => {
+    // throw new Error();
     this.setState((state) => ({ isCompleted: !state.isCompleted }));
     this.timerIdComplete = setTimeout(
       () => this.props.onCompleteTask(this.props.taskObj.id),
@@ -34,6 +35,9 @@ export class TaskItem extends React.Component {
   };
 
   render() {
+    if (this.props.taskObj.value === 'error') {
+      throw new Error(this.props.taskObj.id);
+    }
     return (
       <li
         className={`task-item ${this.state.isCompleted ? 'completed' : 'active'} ${
