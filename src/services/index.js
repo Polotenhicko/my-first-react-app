@@ -1,24 +1,34 @@
-import { DATA_MODELS } from '../constant';
+import { DATA_MODELS, LOCALNAME_TASKS, LOCALNAME_OPTIONS, optionsDefaultModel } from '../constant';
 
 export const isObject = (obj) => typeof obj === 'object' && obj && !Array.isArray(obj);
 
-export function getOptionsObject(optionsParsed) {
-  if (!isObject(optionsParsed)) throw new Error('Это не объект');
-  if (Object.keys(optionsParsed).length !== Object.keys(DATA_MODELS.options).length)
-    throw new Error('Настройки не совпадают');
-  for (const [key, type] of Object.entries(DATA_MODELS.options)) {
-    if (!optionsParsed.hasOwnProperty(key) || typeof optionsParsed[key] !== type)
-      throw new Error('Не совпадает с моделью');
+// нет проверок с моделью данных на массив/объект/null, т.к. используется просто typeof
+export function getOptionsObject() {
+  let options;
+  try {
+    options = JSON.parse(localStorage[LOCALNAME_OPTIONS]);
+    if (!isObject(options)) throw new Error('Это не объект');
+    if (Object.keys(options).length !== Object.keys(DATA_MODELS.options).length)
+      throw new Error('Настройки не совпадают');
+    for (const [key, type] of Object.entries(DATA_MODELS.options)) {
+      if (!options.hasOwnProperty(key) || typeof options[key] !== type)
+        throw new Error('Не совпадает с моделью');
+    }
+  } catch (e) {
+    options = { ...optionsDefaultModel };
+    localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
   }
-  return optionsParsed;
+
+  return options;
 }
 
-export function getTasksArray(taskArrayParsed) {
+export function getTaskArray() {
   let taskArray;
   let isOld = false;
   try {
+    const taskArrayParsed = JSON.parse(localStorage[LOCALNAME_TASKS]);
     if (!Array.isArray(taskArrayParsed)) throw new Error('Не массив');
-    // получить валидный массив на основе старой модели
+    // получить валидный массив на основе нынешней модели
     taskArray = getValidTasks(taskArrayParsed, DATA_MODELS.tasks.taskObject);
     // если пустой, то след модель, мб какой-то обработчик со списком сделать
     if (!taskArray.length) {
@@ -27,8 +37,10 @@ export function getTasksArray(taskArrayParsed) {
     }
   } catch (e) {
     taskArray = [];
+    localStorage.setItem(LOCALNAME_TASKS, JSON.stringify([]));
   }
-  return { taskArray, isOld };
+  if (isOld) localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
+  return taskArray;
 }
 
 function getValidTasks(array, dataModel) {

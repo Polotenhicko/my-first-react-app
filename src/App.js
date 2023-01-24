@@ -1,8 +1,8 @@
 import React from 'react';
 import { HeaderControl } from './components/HeaderControl';
 import { TaskList } from './components/TaskList';
-import { LOCALNAME_TASKS, LOCALNAME_OPTIONS, optionsDefaultModel } from './constant';
-import { getTasksArray, getOptionsObject } from './services/index';
+import { getTaskArray, getOptionsObject } from './services/index';
+import { LOCALNAME_TASKS, LOCALNAME_OPTIONS } from './constant';
 import { Modal } from './components/Modal/Modal';
 import { ModalSettings } from './components/Modal/ModalSettings';
 import { ThemeToggle } from './components/ThemeToggle';
@@ -11,25 +11,10 @@ import { ThemeContext } from './theme-context';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    let taskArray;
-    let options;
     // Получение тасок
-    try {
-      const resultValidate = getTasksArray(JSON.parse(localStorage[LOCALNAME_TASKS]));
-      taskArray = resultValidate.taskArray;
-      if (resultValidate.isOld) localStorage.setItem(LOCALNAME_TASKS, JSON.stringify(taskArray));
-    } catch (e) {
-      taskArray = [];
-      localStorage.setItem(LOCALNAME_TASKS, JSON.stringify([]));
-    }
+    const taskArray = getTaskArray();
     // Получение настроек
-    try {
-      options = getOptionsObject(JSON.parse(localStorage[LOCALNAME_OPTIONS]));
-    } catch (e) {
-      options = { ...optionsDefaultModel };
-      localStorage.setItem(LOCALNAME_OPTIONS, JSON.stringify(options));
-    }
-
+    const options = getOptionsObject();
     this.state = {
       taskArray,
       isSearch: false,
