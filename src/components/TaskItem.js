@@ -17,8 +17,15 @@ export class TaskItem extends React.Component {
     clearTimeout(this.timerIdComplete);
   }
 
+  getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
   handleTaskComplete = (e) => {
-    // throw new Error();
+    // ошибка в обработчике
+    if (this.props.taskObj.value === 'example') {
+      if (this.getRandom(1, 3) === 3) throw new Error('Ошибка асинк');
+    }
     this.setState((state) => ({ isCompleted: !state.isCompleted }));
     this.timerIdComplete = setTimeout(
       () => this.props.onCompleteTask(this.props.taskObj.id),
